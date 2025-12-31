@@ -1,6 +1,6 @@
 import z from "zod";
 
-const itemData = z.object({
+export const itemDataSchema = z.object({
   id: z.number(),
   name: z.string(),
   description: z.string(),
@@ -9,4 +9,4 @@ const itemData = z.object({
   category: z.string(),
 });
 
-export type ItemData = z.infer<typeof itemData>;
+export type ItemData = z.infer<typeof itemDataSchema>;
