@@ -7,9 +7,7 @@ function App() {
   return (
     <Box>
       <ShopBar />
-      <Box sx={{marginTop: "3rem"}}>
-        <ShopTabs />
-      </Box>
+      <ShopTabs />
     </Box>
   );
 }

@@ -1,30 +1,52 @@
 import { create } from "zustand";
-import { v4 as uuidv4 } from "uuid";
+import { SHOP_ITEMS } from "../data/ShopItems";
 
-interface StoreItem {
-  uuid: string;
-  itemId: string;
+interface ShopItem {
+  itemId: number;
+  count: number;
 }
 
-interface StoreState {
-  cartItems: StoreItem[];
-  addItem: (itemId: string) => void;
+export interface ShopState {
+  cartItems: ShopItem[];
+  priceTotal: number;
+  addItem: (itemId: number) => void;
   removeItem: (uuid: string) => void;
 }
 
-const useStore = create<StoreState>((set) => ({
-  cartItems: [],
-  addItem: (itemId: string): void =>
-    set((state) => ({
-      cartItems: [...state.cartItems, { uuid: uuidv4(), itemId }],
-    })),
-  removeItem: (uuid: string): void => {
-    set((state) => ({
-      cartItems: [
-        ...state.cartItems.filter((item) => {
-          item.uuid !== uuid;
-        }),
-      ],
-    }));
-  },
-}));
+export const shopStore = create<ShopState>((set) => {
+  return {
+    cartItems: [],
+    priceTotal: 1000,
+    addItem: (itemId: number): void =>
+      set((state) => {
+        const newState = {
+          cartItems: [...state.cartItems],
+          priceTotal: state.priceTotal,
+        };
+
+        const itemIndex = newState.cartItems.findIndex(
+          (item) => item.itemId === itemId
+        );
+
+        if (itemIndex !== -1) {
+          newState.cartItems[itemIndex].count++;
+        } else {
+          newState.cartItems.push({ itemId: itemId, count: 0 });
+        }
+
+        newState.priceTotal =
+          Math.round(
+            (state.priceTotal -
+              (SHOP_ITEMS.find((item) => item.id === itemId)?.price ?? 0)) *
+              100
+          ) / 100;
+
+        return newState;
+      }),
+    removeItem: (itemId: string): void => {
+      set((state) => {
+        return state; //TODO: add remove item function
+      });
+    },
+  };
+});
