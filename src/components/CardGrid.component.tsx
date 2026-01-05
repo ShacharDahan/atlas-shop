@@ -12,10 +12,34 @@ import { v4 as uuidv4 } from "uuid";
 import { useStore } from "zustand";
 import { shopStore } from "../store/store";
 import { Info, ShoppingCart } from "@mui/icons-material";
+import { useState } from "react";
+import type { ItemData } from "../data/ItemData.interface";
+import { InfoDialog } from "./InfoDialog.component";
 
 export const CardGrid = () => {
   const addItem = useStore(shopStore, (state) => state.addItem);
   const priceTotal = useStore(shopStore, (state) => state.priceTotal);
+
+  const [selectedItem, setSelectedItem] = useState<ItemData | null>(null);
+  const [infoDialogOpen, setInfoDialogOpen] = useState<boolean>(false);
+
+  const handleCloseInfoDialog = () => {
+    setInfoDialogOpen(false);
+    setSelectedItem(null);
+  };
+
+  const handleAddToCart = (itemId?: number) => {
+    if (
+      itemId &&
+      validatePurchasability(
+        SHOP_ITEMS.find((item) => item.id === itemId)?.price ?? 0
+      )
+    ) {
+      addItem(itemId);
+    } else {
+      return;
+    }
+  };
 
   const validatePurchasability = (price: number): boolean =>
     priceTotal - price >= 0;
@@ -57,9 +81,7 @@ export const CardGrid = () => {
               endIcon={<ShoppingCart />}
               size="small"
               sx={{ width: "9rem", height: "2rem", textWrap: "nowrap" }}
-              onClick={() =>
-                validatePurchasability(item.price) ? addItem(item.id) : null
-              } //TODO: error no money pop up
+              onClick={() => handleAddToCart(item.id)} //TODO: error no money pop up
             >
               <Typography sx={{ paddingLeft: "0.2rem" }} component="div">
                 הוספה לסל
@@ -76,7 +98,10 @@ export const CardGrid = () => {
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              onClick={() => {}} //TODO: Add dialog for extra details
+              onClick={() => {
+                setSelectedItem(item);
+                setInfoDialogOpen(true);
+              }}
             >
               <Typography sx={{ paddingLeft: "0.2rem" }} component="div">
                 פרטים
@@ -85,6 +110,13 @@ export const CardGrid = () => {
           </CardActions>
         </Card>
       ))}
+
+      <InfoDialog
+        handleCloseInfoDialog={handleCloseInfoDialog}
+        selectedItem={selectedItem!}
+        infoDialogOpen={infoDialogOpen}
+        handleAddToCart={handleAddToCart}
+      />
     </Box>
   );
 };
