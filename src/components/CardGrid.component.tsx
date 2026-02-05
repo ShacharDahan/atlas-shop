@@ -18,7 +18,6 @@ import { InfoDialog } from "./InfoDialog.component";
 
 export const CardGrid = () => {
   const addItem = useStore(shopStore, (state) => state.addItem);
-  const priceTotal = useStore(shopStore, (state) => state.priceTotal);
 
   const [selectedItem, setSelectedItem] = useState<ItemData | null>(null);
   const [infoDialogOpen, setInfoDialogOpen] = useState<boolean>(false);
@@ -28,21 +27,13 @@ export const CardGrid = () => {
     setSelectedItem(null);
   };
 
-  const handleAddToCart = (itemId?: number) => {
-    if (
-      itemId &&
-      validatePurchasability(
-        SHOP_ITEMS.find((item) => item.id === itemId)?.price ?? 0
-      )
-    ) {
+  const handleAddToCart = (itemId?: number, price?: number) => {
+    if (itemId && price) {
       addItem(itemId);
     } else {
       return;
     }
   };
-
-  const validatePurchasability = (price: number): boolean =>
-    priceTotal - price >= 0;
 
   return (
     <Box
@@ -81,7 +72,7 @@ export const CardGrid = () => {
               endIcon={<ShoppingCart />}
               size="small"
               sx={{ width: "9rem", height: "2rem", textWrap: "nowrap" }}
-              onClick={() => handleAddToCart(item.id)} //TODO: error no money pop up
+              onClick={() => handleAddToCart(item.id, item.price)} //TODO: error no money pop up
             >
               <Typography sx={{ paddingLeft: "0.2rem" }} component="div">
                 הוספה לסל
