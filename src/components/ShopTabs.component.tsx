@@ -3,12 +3,14 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HomeIcon from "@mui/icons-material/Home";
 import { useState, type SyntheticEvent } from "react";
 import { CardGrid } from "./CardGrid.component";
+import { CartPage } from "./CartPage.component";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
+
 const CustomTabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
@@ -42,7 +44,7 @@ const ShopTabs = () => {
         <CardGrid />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Dahan
+        <CartPage />
       </CustomTabPanel>
     </Box>
   );

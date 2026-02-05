@@ -1,10 +1,10 @@
 import { AppBar, Typography } from "@mui/material";
-import { shopStore } from "../store/store";
-import { useStore } from "zustand";
 import { ShoppingCart } from "@mui/icons-material";
+import { useStore } from "zustand";
+import { shopStore } from "../store/store";
 
 const ShopBar = () => {
-  const priceTotal = useStore(shopStore, (state) => state.priceTotal);
+  const money = useStore(shopStore, (state) => state.money);
 
   return (
     <AppBar
@@ -17,8 +17,11 @@ const ShopBar = () => {
         flexDirection: "row",
       }}
     >
-      <Typography variant="h6" sx={{padding: "1.5rem"}}>{`סכום כולל: ${priceTotal}₪`}</Typography>
-      <ShoppingCart sx={{color: "#0B3660", padding: "1.25rem"}}/>
+      <Typography
+        variant="h6"
+        sx={{ padding: "1.5rem" }}
+      >{`סכום כולל: ${money}₪`}</Typography>
+      <ShoppingCart sx={{ color: "#0B3660", padding: "1.25rem" }} />
     </AppBar>
   );
 };
