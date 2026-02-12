@@ -18,7 +18,7 @@ export interface ShopState {
   subtractMoney: (amount: number) => void;
 }
 
-export const shopStore = create<ShopState>()(
+export const useShopStore = create<ShopState>()(
   devtools((set) => {
     return {
       cartItems: [],
@@ -87,7 +87,7 @@ export const shopStore = create<ShopState>()(
           (state) => {
             const newState = { ...state };
 
-            newState.money = newState.money - amount
+            newState.money = newState.money - amount;
 
             newState.money = Math.round(newState.money * 100) / 100;
 

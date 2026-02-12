@@ -12,8 +12,8 @@ import type { ItemData } from "../data/ItemData.interface";
 
 interface InfoDialogProps {
   selectedItem: ItemData;
-  handleAddToCart: Function;
-  handleCloseInfoDialog: Function;
+  handleAddToCart: (itemId: number) => void;
+  handleCloseInfoDialog: () => void;
   infoDialogOpen: boolean;
 }
 
@@ -26,7 +26,9 @@ export const InfoDialog = ({
   return (
     <Dialog onClose={() => handleCloseInfoDialog()} open={infoDialogOpen}>
       <DialogTitle>{selectedItem?.name}</DialogTitle>
-      <DialogContentText sx={{paddingRight: "1rem", paddingLeft: "1rem"}}>{selectedItem?.description}</DialogContentText>
+      <DialogContentText sx={{ paddingRight: "1rem", paddingLeft: "1rem" }}>
+        {selectedItem?.description}
+      </DialogContentText>
       <DialogContent>
         <Box
           component="img"

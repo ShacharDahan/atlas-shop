@@ -1,10 +1,9 @@
 import { AppBar, Typography } from "@mui/material";
 import { ShoppingCart } from "@mui/icons-material";
-import { useStore } from "zustand";
-import { shopStore } from "../store/store";
+import { useShopStore } from "../store/store";
 
 const ShopBar = () => {
-  const money = useStore(shopStore, (state) => state.money);
+  const { money } = useShopStore();
 
   return (
     <AppBar
