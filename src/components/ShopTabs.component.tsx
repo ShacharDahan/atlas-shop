@@ -22,28 +22,28 @@ const CustomTabPanel = (props: TabPanelProps) => {
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: "1rem" }}>{children}</Box>}
     </Box>
   );
 };
 
 const ShopTabs = () => {
-  const [value, setValue] = useState(0);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setSelectedTabIndex(newValue);
   };
 
   return (
     <Box>
-      <Tabs value={value} onChange={handleChange}>
+      <Tabs value={selectedTabIndex} onChange={handleChange}>
         <Tab icon={<HomeIcon />} />
         <Tab icon={<ShoppingCartIcon />} />
       </Tabs>
-      <CustomTabPanel value={value} index={0}>
+      <CustomTabPanel value={selectedTabIndex} index={0}>
         <CardGrid />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
+      <CustomTabPanel value={selectedTabIndex} index={1}>
         <CartPage />
       </CustomTabPanel>
     </Box>

@@ -9,15 +9,14 @@ import {
 } from "@mui/material";
 import { SHOP_ITEMS } from "../data/ShopItems";
 import { v4 as uuidv4 } from "uuid";
-import { useStore } from "zustand";
-import { shopStore } from "../store/store";
+import { useShopStore } from "../store/store";
 import { Info, ShoppingCart } from "@mui/icons-material";
 import { useState } from "react";
 import type { ItemData } from "../data/ItemData.interface";
 import { InfoDialog } from "./InfoDialog.component";
 
 export const CardGrid = () => {
-  const addItem = useStore(shopStore, (state) => state.addItem);
+  const { addItem } = useShopStore();
 
   const [selectedItem, setSelectedItem] = useState<ItemData | null>(null);
   const [infoDialogOpen, setInfoDialogOpen] = useState<boolean>(false);
@@ -25,14 +24,6 @@ export const CardGrid = () => {
   const handleCloseInfoDialog = () => {
     setInfoDialogOpen(false);
     setSelectedItem(null);
-  };
-
-  const handleAddToCart = (itemId?: number, price?: number) => {
-    if (itemId && price) {
-      addItem(itemId);
-    } else {
-      return;
-    }
   };
 
   return (
@@ -72,7 +63,7 @@ export const CardGrid = () => {
               endIcon={<ShoppingCart />}
               size="small"
               sx={{ width: "9rem", height: "2rem", textWrap: "nowrap" }}
-              onClick={() => handleAddToCart(item.id, item.price)} //TODO: error no money pop up
+              onClick={() => addItem(item.id)}
             >
               <Typography sx={{ paddingLeft: "0.2rem" }} component="div">
                 הוספה לסל
@@ -102,12 +93,16 @@ export const CardGrid = () => {
         </Card>
       ))}
 
-      <InfoDialog
-        handleCloseInfoDialog={handleCloseInfoDialog}
-        selectedItem={selectedItem!}
-        infoDialogOpen={infoDialogOpen}
-        handleAddToCart={handleAddToCart}
-      />
+      {selectedItem && (
+        <InfoDialog
+          handleCloseInfoDialog={handleCloseInfoDialog}
+          selectedItem={selectedItem}
+          infoDialogOpen={infoDialogOpen}
+          handleAddToCart={(itemId: number) => {
+            addItem(itemId);
+          }}
+        />
+      )}
     </Box>
   );
 };

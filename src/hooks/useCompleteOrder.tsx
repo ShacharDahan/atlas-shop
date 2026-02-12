@@ -1,34 +1,33 @@
 import { useState } from "react";
-import { useStore } from "zustand";
-import { shopStore } from "../store/store";
+import { useShopStore } from "../store/store";
 
 export const useCompleteOrder = () => {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const items = useStore(shopStore, (state) => state.cartItems);
-  const removeItem = useStore(shopStore, (state) => state.removeItem);
-  const subtractMoney = useStore(shopStore, (state) => state.subtractMoney);
+  const { cartItems } = useShopStore();
+  const { removeItem } = useShopStore();
+  const { subtractMoney } = useShopStore();
 
-  const itemCount = items.reduce((sum, item) => sum + item.count, 0);
+  const itemCount = cartItems.reduce((sum, item) => sum + item.count, 0);
 
   const loadingItemValue = 100 / itemCount;
 
-  const run = async () => {
+  const runCompleteOrder = async () => {
     setIsLoading(true);
-    for (let index = 0; index < items.length; index++) {
-      const item = items[index];
-      for (let jndex = 0; jndex < item.count; jndex++) {
+    for (let i = 0; i < cartItems.length; i++) {
+      const item = cartItems[i];
+      for (let j = 0; j < item.count; j++) {
         removeItem(item.itemId);
         subtractMoney(item.price);
         setLoadingProgress(
           (prevLoadingProgress) => prevLoadingProgress + loadingItemValue,
         );
-        await new Promise((r) => setTimeout(r, 750));
+        await new Promise((resolve) => setTimeout(resolve, 750));
       }
     }
     setIsLoading(false);
   };
 
-  return { run, loadingProgress, isLoading };
+  return { runCompleteOrder, loadingProgress, isLoading };
 };
